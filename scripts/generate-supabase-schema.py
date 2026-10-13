@@ -9,6 +9,8 @@ for kind,name,sql in db.execute("select type,name,sql from sqlite_master where s
  sql=re.sub(r'\bINTEGER\b','BIGINT',sql,flags=re.I)
  sql=re.sub(r'(CREATE TABLE )("?\w+"?)',r'\1app_private.\2',sql,flags=re.I)
  sql=re.sub(r'( ON )("?\w+"?)',r'\1app_private.\2',sql,flags=re.I)
+ sql=re.sub(r'CREATE TABLE ', 'CREATE TABLE IF NOT EXISTS ', sql, flags=re.I)
+ sql=re.sub(r'CREATE (UNIQUE )?INDEX ', lambda m:'CREATE '+(m.group(1) or '')+'INDEX IF NOT EXISTS ', sql, flags=re.I)
  statements.append(sql+';')
  if kind=='table':statements.extend([f'ALTER TABLE app_private."{name}" ENABLE ROW LEVEL SECURITY;',f'ALTER TABLE app_private."{name}" FORCE ROW LEVEL SECURITY;'])
 header='''-- LingoLive stage 1: schema only. No current data or API keys are copied.

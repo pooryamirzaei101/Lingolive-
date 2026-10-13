@@ -11,7 +11,7 @@
 ## Owner action — database setup only
 
 1. In the Supabase project, open **SQL Editor → New query**.
-2. Copy the complete contents of `supabase/migrations/202610130001_initial_private_schema.sql` from this repository, paste it, and press **Run** once. Do not edit it.
+2. Copy the complete contents of `supabase/migrations/202610130001_initial_private_schema.sql` from this repository, paste it, and press **Run**. It is safe to rerun this setup; existing tables and records are retained. Do not edit it.
 3. Tell the developer whether it succeeded, or send the error text. Do not send passwords or secret keys.
 
 This creates empty tables in `app_private`. It does not copy current lessons, recordings, users or API credentials. The tables will not appear in the default `public` schema view. Do not add `app_private` to the exposed Data API schemas.
