@@ -1,3 +1,5 @@
+import {supabaseConfig} from '@/lib/supabase/config';
+import {supabaseIdentity} from '@/lib/supabase/server';
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -19,6 +21,7 @@ const SIGN_OUT_PATH = "/signout-with-chatgpt";
 const CALLBACK_PATH = "/callback";
 
 export async function getChatGPTUser(): Promise<ChatGPTUser | null> {
+  if(supabaseConfig().enabled)return supabaseIdentity();
   const requestHeaders = await headers();
   const userId = requestHeaders.get(USER_ID_HEADER);
   const email = requestHeaders.get(USER_EMAIL_HEADER);
@@ -50,11 +53,13 @@ export async function requireChatGPTUser(
 
 export function chatGPTSignInPath(returnTo: string): string {
   const safeReturnTo = safeRelativeReturnPath(returnTo);
+  if(supabaseConfig().enabled)return "/auth/supabase";
   return `${SIGN_IN_PATH}?return_to=${encodeURIComponent(safeReturnTo)}`;
 }
 
 export function chatGPTSignOutPath(returnTo = "/"): string {
   const safeReturnTo = safeRelativeReturnPath(returnTo);
+  if(supabaseConfig().enabled)return "/auth/supabase?mode=signout";
   return `${SIGN_OUT_PATH}?return_to=${encodeURIComponent(safeReturnTo)}`;
 }
 
