@@ -1,0 +1,3 @@
+import {supabaseServer} from '@/lib/supabase/server';
+import {safeAuthReturn} from '@/lib/supabase/config';
+export async function GET(request:Request){const url=new URL(request.url),code=url.searchParams.get('code');try{if(!code)throw Error();const client=await supabaseServer();const {error}=await client.auth.exchangeCodeForSession(code);if(error)throw Error();const requested=url.searchParams.get('next');const next=requested==='/auth/supabase?mode=update'?requested:safeAuthReturn(requested);return Response.redirect(new URL(next,url.origin),303)}catch{return Response.redirect(new URL('/auth/supabase?error=confirmation',url.origin),303)}}
